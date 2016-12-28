@@ -109,6 +109,9 @@ if __name__ == "__main__":
     # ax = fig.add_subplot(111, projection='3d')
     # ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=1, cstride=1, cmap=cm.Paired, linewidth=0)
     ax = fig.gca(projection='3d')
-    surf = ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    surf = ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=2, cstride=2, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.show()
+
+    raw_input("enter to continue...")
+
