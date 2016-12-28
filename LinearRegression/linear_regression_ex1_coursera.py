@@ -80,8 +80,8 @@ if __name__ == "__main__":
     print theta
     y_hat = np.dot(X, theta)
 
-    plt.plot(X[:, 1], y, 'go', markersize=8)
-    plt.plot(X[:, 1], y_hat, 'b-', linewidth=4)
+    plt.plot(X[:, 1], y, 'rx', markersize=8)
+    plt.plot(X[:, 1], y_hat, 'g-', linewidth=2)
     plt.xlim(4, 25)
     plt.xlabel('Population of City in 10,000s')
     plt.ylabel('Profit in $10,000s')
@@ -95,23 +95,40 @@ if __name__ == "__main__":
     t1 = np.linspace(x1_min, x1_max, N)
     t2 = np.linspace(x2_min, x2_max, M)
     x1, x2 = np.meshgrid(t1, t2)                    # 生成网格采样点
-    x_test = np.stack((x1.flat, x2.flat), axis=1)   # 测试点
+    # x_test = np.stack((x1.flat, x2.flat), axis=0)   # 测试点
+    x_test = np.vstack((x1.flat, x2.flat))  # 测试点
 
     print x_test.shape
 
-    j_vals = np.zeros((len(x_test), 1))
-    for i in range(len(x_test)):
-        j_vals[i] = computeCost(X, y, x_test[i, :])
+    # j_vals = np.zeros((len(x_test), 1))
+    # for i in range(x_test.shape[1]):
+    #     j_vals[i] = computeCost(X, y, x_test[:, i])
+
+    j_vals = np.zeros(x1.shape)
+    for i in range(len(t1)):
+        for j in range(len(t2)):
+            j_vals[i][j] = computeCost(X, y, np.array([[x1[i][j]], [x2[i][j]]]))
 
     print j_vals.shape
 
     fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
-    # ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=1, cstride=1, cmap=cm.Paired, linewidth=0)
+    # ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=1, cstride=1, cmap=cm.coolwarm, linewidth=0)
     ax = fig.gca(projection='3d')
-    surf = ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=2, cstride=2, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+    surf = ax.plot_surface(x1, x2, j_vals.reshape(x1.shape), rstride=2, cstride=2, cmap=cm.rainbow, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
     plt.show()
 
-    raw_input("enter to continue...")
+    level = np.logspace(0, 3, 8)
+    # level = np.array([6, 12, 24, 48, 96, 192, 364, 600, 1200])
+    # plt.contour(x1, x2, j_vals, colors=list('krk'), linestyles=['--', '-', '--'], linewidths=[1, 2, 1], levels=[-1, 0, 1])
+    plt.contour(x1, x2, j_vals.reshape(x1.shape), levels=level)
+    plt.xlim(x1_min, x1_max)
+    plt.ylim(x2_min, x2_max)
+    plt.title("contour")
+    plt.grid()
+    plt.plot(theta[0], theta[1], 'rx', markersize=8, linewidth=4)
+    plt.show()
+
+    # raw_input("enter to continue...")
 
