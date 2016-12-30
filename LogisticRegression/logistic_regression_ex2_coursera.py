@@ -52,6 +52,7 @@ def plotDecisionBoundary(X, y, theta):
     plt.xlim(x1_min, x1_max)
     plt.ylim(x2_min, x2_max)
     plt.grid()
+    plt.savefig('lr.png')
     plt.show()
 
 def sigmoid(Z):
