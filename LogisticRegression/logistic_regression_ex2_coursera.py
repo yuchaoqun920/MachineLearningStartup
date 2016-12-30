@@ -24,6 +24,36 @@ def plotData(X, y):
     plt.legend(loc='upper right')
     plt.show()
 
+# 预测结果画图
+def plotDecisionBoundary(X, y, theta):
+    M, N = 1000, 1000
+    x1_min, x1_max = 30, 100
+    x2_min, x2_max = 30, 100
+    t1 = np.linspace(x1_min, x1_max, M)
+    t2 = np.linspace(x2_min, x2_max, N)
+    x1, x2 = np.meshgrid(t1, t2)
+    x_test = np.stack((x1.flat, x2.flat), axis=1)  # 测试点
+    # print x_test.shape
+    # cm_light = mpl.colors.ListedColormap(['#77E0A0', '#FF8080', '#A0A0FF'])
+    # cm_dark = mpl.colors.ListedColormap(['g', 'r', 'b'])
+    cm_light = mpl.colors.ListedColormap(['#FF8080', '#A0A0FF'])
+    cm_dark = mpl.colors.ListedColormap(['r', 'b'])
+    (m, n) = x_test.shape
+    xt_test = np.hstack((np.ones((m, 1)), x_test))
+    yhat_test = predict(xt_test, theta)
+    yhat_test = yhat_test >= 0.5
+    # print yhat_test
+    plt.pcolormesh(x1, x2, yhat_test.reshape(x1.shape), cmap=cm_light)     # 预测值的显示
+    plt.scatter(X[:, 0], X[:, 1], c=y, edgecolors='k', s=50, cmap=cm_dark)    # 样本的显示
+    plt.xlabel('Exam 1 score')
+    plt.ylabel('Exam 2 score')
+    plt.title('Final Results')
+#     plt.legend(loc='upper right')
+    plt.xlim(x1_min, x1_max)
+    plt.ylim(x2_min, x2_max)
+    plt.grid()
+    plt.show()
+
 def sigmoid(Z):
     expz = np.exp(-Z)
     sigmd = 1/(1+expz)
@@ -103,3 +133,5 @@ if __name__ == '__main__':
     # print p_r
     accuracy = np.mean(p_r == y)
     print 'accuracy: %0.2f%%\n' % (accuracy * 100)
+
+    plotDecisionBoundary(X, y, theta)
